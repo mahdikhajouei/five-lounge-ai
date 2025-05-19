@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>فایوبات - پیشنهاد هوشمند منو</title>
+    <style>
+        body { font-family: sans-serif; background-color: #111; color: #eee; padding: 30px; direction: rtl; }
+        #chat { max-width: 600px; margin: auto; }
+        .bot, .user { margin: 10px 0; padding: 12px; border-radius: 10px; }
+        .bot { background: #333; }
+        .user { background: #009688; color: white; text-align: left; }
+        input, button { padding: 10px; margin-top: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <div class="bot">سلام! 😄 خوش اومدی به فایوبات. بریم ببینیم امروز چی دلت می‌خواد؟</div>
+    </div>
+    <input id="input" placeholder="جواب خودتو بنویس..." autofocus />
+    <button onclick="handleInput()">ارسال</button>
+
+    <script>
+        const chat = document.getElementById("chat");
+        const input = document.getElementById("input");
+        const questions = [
+            "الان چه احساسی داری؟ خسته‌ای، سرحال، گرسنه یا بی‌حوصله؟",
+            "امروز دنبال چه تجربه‌ای هستی؟ یه غذای خاص، یه نوشیدنی خنک یا یه حال خوب؟",
+            "کدوم سبک غذا بیشتر به حالت می‌خوره؟ ایرانی، ایتالیایی، اسپایسی یا مدیترانه‌ای؟",
+            "با نوشیدنی چی حال می‌کنی؟ موهیتو، میلک‌شیک، قهوه یا دمنوش؟",
+            "اهل قلیون هستی؟ اگه آره، بیشتر چه طعمی دوست داری؟",
+            "در کل از چی بیشتر لذت می‌بری؟ طعم جدید، خوراکی آشنا، چیزای خلاقانه یا چیز ساده و خوشمزه؟"
+        ];
+        const menuSuggestions = {
+            "ایرانی": "لقمه کباب کلاسیک با سالاد باباغنوش و دوغ یا چای مراکشی",
+            "ایتالیایی": "پاستا الفردو با مرغ + لیموناد زنجبیلی",
+            "مدیترانه‌ای": "شش کباب با نودل کدو سبز و موهیتو کوبایی",
+            "اسپایسی": "جوجه کشمیری با چای ترش و چیپس گل کلم",
+            "قهوه": "اسپرسو دبل یا لاته با تیرامیسو پرسی",
+            "میلک‌شیک": "شیک نوتلا یا دبل چاکلت",
+            "موهیتو": "پرشین موهیتو یا بری کولادا",
+            "دمنوش": "دمنوش آرامش بخش با کیک هویج و بستنی"
+        };
+
+        let step = 0;
+        let answers = [];
+
+        function handleInput() {
+            const userText = input.value.trim();
+            if (!userText) return;
+            addMessage(userText, "user");
+            answers.push(userText);
+            input.value = "";
+            step++;
+            if (step < questions.length) {
+                addMessage(questions[step], "bot");
+            } else {
+                const summary = analyzeAnswers(answers);
+                addMessage("پیشنهاد امروز برای تو 👇", "bot");
+                addMessage(summary, "bot");
+                addMessage("راضی بودی از پیشنهادم؟ اگه نه بگو تا یکی دیگه بگم! 😎", "bot");
+                step = questions.length + 1;
+            }
+        }
+
+        function addMessage(text, type) {
+            const msg = document.createElement("div");
+            msg.className = type;
+            msg.textContent = text;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function analyzeAnswers(answers) {
+            const map = answers.join(" ");
+            if (map.includes("ایرانی")) return menuSuggestions["ایرانی"];
+            if (map.includes("ایتالیایی")) return menuSuggestions["ایتالیایی"];
+            if (map.includes("مدیترانه")) return menuSuggestions["مدیترانه‌ای"];
+            if (map.includes("اسپایسی")) return menuSuggestions["اسپایسی"];
+            if (map.includes("قهوه")) return menuSuggestions["قهوه"];
+            if (map.includes("میلک") || map.includes("شیک")) return menuSuggestions["میلک‌شیک"];
+            if (map.includes("موهیتو")) return menuSuggestions["موهیتو"];
+            if (map.includes("دمنوش")) return menuSuggestions["دمنوش"];
+            return "یه پیشنهاد خاص پیدا نکردم 😅 اما بیا یه قهوه شیخ یا میلک‌شیک لوتوس تست کنیم؟";
+        }
+
+        addMessage(questions[0], "bot");
+    </script>
+</body>
+</html>
